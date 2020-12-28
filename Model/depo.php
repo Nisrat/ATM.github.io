@@ -14,9 +14,25 @@ if($link === false){
     die("ERROR: Could not connect. " . mysqli_connect_error());
 }
 
+$card=$_POST["card_no"];
 $deposit = $_POST["deposit"];
-$card= $_POST["card_no"];
 
+$query = $link->query("SELECT `balan` FROM `balance` Where card_no='$card';");
+$array = Array();
+while($result = $query->fetch_assoc()){
+    $array[] = $result['balan'];
+    
+}
+$balances= $array[0];
+
+
+$sql="INSERT INTO history(card_no, deposit) VALUES('$card', '$deposit')";
+$b= totalbalance($balances,$deposit);
+$balan="UPDATE balance SET balan = $b Where card_no='$card'";
+function totalbalance($a,$c)  
+{  
+    return $a + $c;
+} 
 
 
 $sql="INSERT INTO history(card_no, deposit) VALUES('$card', '$deposit')";
