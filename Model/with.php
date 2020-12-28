@@ -17,10 +17,22 @@ if($link === false){
 $with = $_POST["withdraw"];
 $card= $_POST["card_no"];
 
-
+$query = $link->query("SELECT `balan` FROM `balance` Where card_no='$card';");
+$array = Array();
+while($result = $query->fetch_assoc()){
+    $array[] = $result['balan'];
+    
+}
+$balances= $array[0];
 
 $sql="INSERT INTO history(card_no, withdraw) VALUES('$card', '$with')";
-$balan="UPDATE balance SET balan = balan - $with Where card_no='$card'";
+$b= totalbalance($balances,$with);
+$balan="UPDATE balance SET balan =$b  Where card_no='$card'";
+function totalbalance($a,$c)  
+{  
+    return $a - $c;
+} 
+
 
 if ($link->query($sql) === TRUE && $link->query($balan) === TRUE) {
     header("Location: ../View/welcome.php");
