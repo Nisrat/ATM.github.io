@@ -16,8 +16,22 @@ if($link === false){
 
 
 $card= $_POST["card_no"];
+
+$query = $link->query("SELECT `balan` FROM `balance` Where card_no='$card';");
+$array = Array();
+while($result = $query->fetch_assoc()){
+    $array[] = $result['balan'];
+    
+}
+$balances= $array[0];
+
 $sql="INSERT INTO history(card_no, withdraw) VALUES('$card', '20000')";
-$balan="UPDATE balance SET balan = balan - 20000 Where card_no='$card'";
+$b= totalbalance($balances,20000);
+$balan="UPDATE balance SET balan =$b  Where card_no='$card'";
+function totalbalance($a,$c)  
+{  
+    return $a - $c;
+} 
 
 if ($link->query($sql) === TRUE && $link->query($balan) === TRUE) {
     header("Location: ../View/welcome.php");
